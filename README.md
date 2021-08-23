@@ -15,6 +15,9 @@ Should be simple to get working! To use the shuffler, do the following:
 
 If you wish to change the min/max times, add/remove games during playthrough, add a countdown on the screen, and randomize the seed (recommended), open the RaceShufflerSetup.exe.
 
+If you wish to adjust the timing of your shuffler to align with your friends use the "[" or "]" on your keyboard to move forward or backward in time. 
+To pause hit the "Pause" button on your keyboard. 
+
 The file "CurrentGameTime.txt" will automatically change when moving to a new ROM. Feel free to use this for your OBS layout.
 
 Future builds will hopefully have the following:
