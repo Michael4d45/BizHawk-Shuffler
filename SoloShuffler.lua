@@ -1,5 +1,6 @@
 local gettime = require("socket.core").gettime
 gui.clearGraphics()
+console.clear()
 
 buffer = 0 -- Sets countdown location. Adding 8 makes it appear correct for the NES.
 if emu.getsystemid() == "NES" then
@@ -63,11 +64,8 @@ function dirLookup() -- Reads all ROM names in the CurrentROMs folder.
 	local games = {}
 	local i = 0
 	for directory in io.popen([[dir ".\\CurrentROMs" /b]]):lines() do
-		if ends_with(directory, ".bin") then
-			console.log("SKIP: " .. directory)
-		else
+		if not ends_with(directory, ".bin") then
 			i = i + 1
-			console.log(i .. " ROM: " .. directory)
 			games["rom" .. i] = directory
 		end
 	end
@@ -202,7 +200,6 @@ function nextGame()
 			local ranNumber = 1
 			while newGame == currentGame or newGame == nil do
 				ranNumber = math.random(1, databaseSize)
-				console.log("roll " .. ranNumber)
 				newGame = games["rom" .. ranNumber]
 			end
 		end
@@ -230,7 +227,6 @@ function saveInitialTime(t)
 end
 
 function resetTicker() 
-	console.log("getting time")
 	saveInitialTime(gettime())
 	saveTotalTime(0)
 end
@@ -290,8 +286,6 @@ end
 
 getSettings()
 
-console.log(gameinfo.getromname())
-
 if newShuffle or currentGame == nil or gameinfo.getromname() == "Null" then
 	-- starting or resuming a new shuffle run
 	seed = initialSeed
@@ -303,8 +297,10 @@ if newShuffle or currentGame == nil or gameinfo.getromname() == "Null" then
 	resetTicker() 
 else 
 	-- continuing a shuffle run
-	savestate.load(stateFile)
-	console.log("Current Game: " .. currentGame)
+	if exists(stateFile) then
+		savestate.load(stateFile)
+	end
+	console.log(gameinfo.getromname())
 	readTimes(currentGame)
 
 	readSeed()
@@ -316,7 +312,6 @@ else
 	saveTotalTime(totalTimeLimit + timeLimit)
 end
 
-console.log("seed " .. seed)
 console.log("Time Limit " .. to_time(timeLimit))
 
 lastFrame = -1
